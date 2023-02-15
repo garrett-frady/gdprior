@@ -4,6 +4,9 @@
 # gdprior
 
 <!-- badges: start -->
+
+[![Travis build
+status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://travis-ci.com/garrett-frady/gdprior)
 <!-- badges: end -->
 
 The goal of gdprior is to provide functionality for my package. These
