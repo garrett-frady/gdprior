@@ -9,8 +9,6 @@
 status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://travis-ci.com/garrett-frady/gdprior)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/garrett-frady/gdprior?branch=master&svg=true)](https://ci.appveyor.com/project/garrett-frady/gdprior)
-[![Codecov test
-coverage](https://codecov.io/gh/garrett-frady/gdprior/branch/master/graph/badge.svg)](https://app.codecov.io/gh/garrett-frady/gdprior?branch=master)
 <!-- badges: end -->
 
 The goal of gdprior is to provide functionality for my package. These
