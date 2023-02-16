@@ -7,6 +7,8 @@
 
 [![Travis build
 status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://travis-ci.com/garrett-frady/gdprior)
+[![AppVeyor build
+status](https://ci.appveyor.com/api/projects/status/github/garrett-frady/gdprior?branch=master&svg=true)](https://ci.appveyor.com/project/garrett-frady/gdprior)
 <!-- badges: end -->
 
 The goal of gdprior is to provide functionality for my package. These
