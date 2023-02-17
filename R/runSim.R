@@ -15,6 +15,7 @@
 #' @export
 #'
 #' @importFrom stats runif
+#' @importFrom MASS mvrnorm
 
 runSim <- function(y,
                    X,
@@ -121,7 +122,7 @@ runSim <- function(y,
 
   pred_rates = rates_pred(y_test, y_pred)
 
-  list(modFit = modFit
+  list(modFit = modFit,
        fExt = fExt,
        est_rates = est_rates,
        pred_rates = pred_rates)
