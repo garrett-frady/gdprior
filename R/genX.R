@@ -7,7 +7,7 @@
 #' @param tau number of time points
 #' @param mu mean of MVN distribution to generate U
 #' @param rho like a correlation coefficient used to generate S
-#' @param S standard deviation of MVN distribution to generate u
+#' @param S standard deviation of MVN distribution to generate U
 #'
 #' @return three-dimensional array of data
 #' @export

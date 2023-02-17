@@ -4,14 +4,12 @@
 \alias{bf_fn}
 \title{Bayes Factor Feature Extraction Approach}
 \usage{
-bf_fn(bin_vec, log.K = seq(0, 3, by = 0.1), plot = FALSE)
+bf_fn(bin_vec, log.K = seq(0, 3, by = 0.1))
 }
 \arguments{
 \item{bin_vec}{vector of 0's and 1's}
 
 \item{log.K}{values to consider for K, parameter in beta distribution for the passive model}
-
-\item{plot}{logical parmeter specifying if the function should construct plots}
 }
 \value{
 list of Bayes factor statistics

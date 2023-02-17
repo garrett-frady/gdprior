@@ -30,7 +30,7 @@ genX(
 
 \item{rho}{like a correlation coefficient used to generate S}
 
-\item{S}{standard deviation of MVN distribution to generate u}
+\item{S}{standard deviation of MVN distribution to generate U}
 }
 \value{
 three-dimensional array of data

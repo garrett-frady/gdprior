@@ -5,10 +5,18 @@
 \title{Function to Run GD Simulations}
 \usage{
 runSim(
-  y,
-  X,
-  beta,
-  trn_ind,
+  n,
+  L,
+  tau,
+  n_trn,
+  N = 2 * n,
+  actL = ceiling(0.2 * L),
+  actL_p_t = 0.9,
+  inactL_p_t = 0.1,
+  c = 3,
+  mu = rep(0, L),
+  rho = 0.5,
+  S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
   tau0 = 10^(-5),
   chains = 4,
   warmup = 3000,
@@ -18,13 +26,29 @@ runSim(
 )
 }
 \arguments{
-\item{y}{response vector}
+\item{n}{number of subjects}
 
-\item{X}{data}
+\item{L}{number of locations}
 
-\item{beta}{true coefficient vector}
+\item{tau}{number of time points}
 
-\item{trn_ind}{training indices}
+\item{n_trn}{size of training set}
+
+\item{N}{value chosen sufficiently larger than n to sample X from}
+
+\item{actL}{number of active locations - default \eqn{actL = ceiling(0.2*L)}}
+
+\item{actL_p_t}{prob of coefficient at time point t being significant for an active location - default \eqn{actL_p_{lt} = 0.9}}
+
+\item{inactL_p_t}{prob of coefficient at time point t being significant for an inactive location - default \eqn{inactL_p_{lt} = 0.1}}
+
+\item{c}{multiplying constant to increase the magnitude of nonzero entries in the true beta matrix - default \eqn{c = 3}}
+
+\item{mu}{mean of MVN distribution to generate U}
+
+\item{rho}{like a correlation coefficient used to generate S}
+
+\item{S}{standard deviation of MVN distribution to generate U}
 
 \item{tau0}{hyperparameter used in GD prior}
 

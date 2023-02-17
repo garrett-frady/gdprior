@@ -6,8 +6,6 @@
 #'
 #' @return binary predicted response vector of length \eqn{m}
 #' @export
-#'
-#' @importFrom stats rbinom
 
 pred = function(b_ests, # estimates of beta returned from two stage,
                 bInd, # indices of selected locations from two-stage feature extraction

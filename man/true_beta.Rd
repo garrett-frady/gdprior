@@ -27,7 +27,7 @@ true_beta(
 \item{c}{multiplying constant to increase the magnitude of nonzero entries in the true beta matrix - default \eqn{c = 3}}
 }
 \value{
-\eqn{L \times \tau} matrix of beta coefficients
+list containing \eqn{L \times \tau} matrix of beta coefficients and vector of indices of active locations
 }
 \description{
 Active locations should display a longer streaky behavior of 1's over time

@@ -6,17 +6,12 @@
 #'
 #' @param bin_vec vector of 0's and 1's
 #' @param log.K values to consider for K, parameter in beta distribution for the passive model
-#' @param plot logical parmeter specifying if the function should construct plots
 #'
 #' @return list of Bayes factor statistics
 #' @export
-#'
-#' @importFrom LearnBayes laplace
-#' @importFrom graphics abline
 
 bf_fn <- function(bin_vec, # vector of 0's and 1's
-                  log.K = seq(0, 3, by = 0.1),
-                  plot=FALSE) {
+                  log.K = seq(0, 3, by = 0.1)) {
 
   ################ functions ####################
   betageom.bf.K = function(theta, s) {
@@ -58,15 +53,6 @@ bf_fn <- function(bin_vec, # vector of 0's and 1's
   max.log.BF=max(0, max(log.BF))
   max.log.K=ifelse(max.log.BF>0,
                    log.K[log.BF==max.log.BF], NA)
-
-  if(plot==TRUE)
-  {
-    plot(log.K, log.BF, type="l", xlab="log K",
-         ylab="log Bayes Factor", lwd=3, col="red",
-         main=paste("max log BF =",round(max.log.BF,1)))
-    abline(h=0, col="blue", lwd=3)
-    abline(v=max.log.K, lty=2, lwd=3, col="green")
-  }
 
   list(log.K=log.K, log.BF=log.BF,
        max.log.BF=max.log.BF, max.log.K=max.log.K)

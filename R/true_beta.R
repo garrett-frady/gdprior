@@ -9,7 +9,7 @@
 #' @param inactL_p_t prob of coefficient at time point t being significant for an inactive location - default \eqn{inactL_p_{lt} = 0.1}
 #' @param c multiplying constant to increase the magnitude of nonzero entries in the true beta matrix - default \eqn{c = 3}
 #'
-#' @return \eqn{L \times \tau} matrix of beta coefficients
+#' @return list containing \eqn{L \times \tau} matrix of beta coefficients and vector of indices of active locations
 #' @export
 
 true_beta = function(L,
