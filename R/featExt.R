@@ -3,17 +3,17 @@
 #' @param b \eqn{L} x \eqn{tau} matrix of estimates of beta
 #' @param init_thres threshold in first stage to induce sparsity
 #' @param bf_thres threshold to be used to compare Bayes factor
-#' @param L number of locations
-#' @param tau number of time points
 #'
 #' @return list containing nonzero estimates after first stage, active indices according to the second stage, and vector of maxBF values
 #' @export
 
 featExt = function(b,
                    init_thres,
-                   bf_thres,
-                   L,
-                   tau) {
+                   bf_thres) {
+
+  L = dim(b)[1] # number of locations
+  tau = dim(b)[1] # number of time points
+
   ######################################
   ### First-stage feature extraction ###
   ######################################
