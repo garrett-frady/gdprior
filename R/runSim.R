@@ -14,8 +14,12 @@
 #' @return list containing important measures to report from simulation
 #' @export
 #'
-#' @importFrom stats runif
 #' @importFrom MASS mvrnorm
+#' @importFrom rstan stan get_posterior_mean extract
+#' @importFrom parallel detectCores
+#' @importFrom doParallel registerDoParallel
+#' @importFrom stats glm runif
+#' @import foreach
 
 runSim <- function(y,
                    X,
@@ -40,74 +44,8 @@ runSim <- function(y,
   X_trn <- X[trn_ind, , ] # training set for the data
   X_test <- X[-trn_ind, , ] # testing set for the data
 
-  # rstan MCMC code for the GD model
-  modRstan = "
-
-    functions {
-
-      vector colSums(matrix M) {
-        int ncol;
-        vector[cols(M)] sums;
-
-        ncol = cols(M);
-        for (i in 1:ncol) {
-          sums[i] = sum(M[, i]);
-        }
-        return(sums);
-      }
-
-    }
-
-    data {
-
-      int<lower = 0> n;
-      int<lower = 0> L;
-      matrix[n, L] X;
-      int<lower = 0, upper = 1> y[n];
-      real<lower = 10^(-10)> tau0;
-
-    }
-
-    transformed data {
-
-      vector[L] tXX_diag;
-      tXX_diag = colSums(X .* X);
-
-    }
-
-    parameters {
-
-      vector[L] beta;
-      vector<lower = 0>[L] d;
-      real<lower = 0> lambda;
-
-    }
-
-    model {
-
-      lambda ~ gamma(0.1, 0.2);
-
-      for (j in 1:L) {
-        d[j] ~ gamma(lambda + 0.5, tau0^2/(2*tXX_diag[j]));
-      }
-
-      for (j in 1:L) {
-        beta[j] ~ normal(0, sqrt(1/d[j]));
-      }
-
-      y ~ bernoulli_logit_glm(X, 0, beta);
-
-    }
-
-  "
-
-  # initial values for latent vector d and tuning parameter lambda
-  d_init <- as.list(runif(n = L, min = 0, max = 10^(-5)))
-  lambda_init <- as.list(runif(n = 1, min = 0, max = 10^(-3)))
-
-  modFit = localMods(y = y_trn, X = X_trn, d_init = d_init, lambda_init = lambda_init,
-                      tau0 = tau0, modRstan = modRstan, chains = chains,
-                      warmup = warmup, iter = iter)
+  modFit = localMods(y = y_trn, X = X_trn, tau0 = tau0, chains = chains,
+                     warmup = warmup, iter = iter)
 
   fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres)
 

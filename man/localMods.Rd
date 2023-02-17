@@ -4,30 +4,14 @@
 \alias{localMods}
 \title{Constructing Local Models in Parallel}
 \usage{
-localMods(
-  y,
-  X,
-  d_init,
-  lambda_init,
-  tau0 = 10^(-5),
-  modRstan,
-  chains = 4,
-  warmup = 3000,
-  iter = 10000
-)
+localMods(y, X, tau0 = 10^(-5), chains = 4, warmup = 3000, iter = 10000)
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}
 
 \item{X}{\eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points}
 
-\item{d_init}{initial value for \eqn{d}}
-
-\item{lambda_init}{initial values for \eqn{\lambda}}
-
 \item{tau0}{predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}}
-
-\item{modRstan}{stan model object}
 
 \item{chains}{number of chains in MCMC algorithm - default \eqn{chains = 4}}
 
