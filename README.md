@@ -11,17 +11,22 @@ status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://
 status](https://ci.appveyor.com/api/projects/status/github/garrett-frady/gdprior?branch=master&svg=true)](https://ci.appveyor.com/project/garrett-frady/gdprior)
 <!-- badges: end -->
 
-The goal of gdprior is to provide functionality for my package. These
-functions are used to perform estimation, feature extraction, and
-prediction under the GD prior structure, applied to sparse, high
-dimensional spatio-temporal data.
+R package for “Frady, G., Dey, D.K. and Mohammed, S., 2023. Gaussian and
+Diffused-gamma Feature Extraction Applied to Sparse, High Dimensional
+Spatio-Temporal Data by Local Modeling.”
+
+Code to perform estimation, feature extraction, and prediction under the
+GD prior structure.
 
 ## Installation
 
 You can install the development version of gdprior like so:
 
 ``` r
-# FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
+# install the package (devtools required)
+if(!require(devtools)) install.packages("devtools")
+devtools::install_github('garrett-frady/gdprior')
+library(gdprior)
 ```
 
 ## Example
