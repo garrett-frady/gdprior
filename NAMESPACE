@@ -2,6 +2,7 @@
 
 export(localMods)
 export(pred)
+export(true_beta)
 import(foreach)
 importFrom(doParallel,registerDoParallel)
 importFrom(parallel,detectCores)
