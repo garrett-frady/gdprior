@@ -16,6 +16,8 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports: 
+    graphics,
+    LearnBayes,
     doParallel,
     foreach,
     parallel,
