@@ -4,7 +4,7 @@
 \alias{bf_fn}
 \title{Bayes Factor Feature Extraction Approach}
 \usage{
-bf_fn(bin_vec, log.K = seq(0, 3, by = 0.1))
+bf_fn(bin_vec, log.K = seq(0, 100, by = 0.1))
 }
 \arguments{
 \item{bin_vec}{vector of 0's and 1's}
