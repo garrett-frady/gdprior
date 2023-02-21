@@ -4,7 +4,15 @@
 \alias{localMods}
 \title{Constructing Local Models in Parallel}
 \usage{
-localMods(y, X, tau0 = 10^(-5), chains = 4, warmup = 3000, iter = 10000)
+localMods(
+  y,
+  X,
+  tau0 = 10^(-5),
+  ncores = parallel::detectCores(),
+  chains = 4,
+  warmup = 3000,
+  iter = 10000
+)
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}
@@ -12,6 +20,8 @@ localMods(y, X, tau0 = 10^(-5), chains = 4, warmup = 3000, iter = 10000)
 \item{X}{\eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points}
 
 \item{tau0}{predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}}
+
+\item{ncores}{number of cores to use}
 
 \item{chains}{number of chains in MCMC algorithm - default \eqn{chains = 4}}
 

@@ -4,6 +4,8 @@
 #' @param L number of locations
 #' @param tau number of time points
 #' @param n_trn size of training set
+#' @param seed seed for reproducibility
+#' @param ncores number of cores to use
 #' @param N value chosen sufficiently larger than n to sample X from
 #' @param actL number of active locations - default \eqn{actL = ceiling(0.2*L)}
 #' @param actL_p_t prob of coefficient at time point t being significant for an active location - default \eqn{actL_p_{lt} = 0.9}
@@ -34,6 +36,8 @@ runSim <- function(n,
                    L,
                    tau,
                    n_trn,
+                   seed = 1234,
+                   ncores = parallel::detectCores(),
                    N = 2*n,
                    actL = ceiling(0.2*L),
                    actL_p_t = 0.9,
@@ -51,6 +55,8 @@ runSim <- function(n,
 
 ) {
 
+  # set seed for reprodicibility
+  set.seed(seed)
   # generate true coefficient matrix - L x tau
   gen_beta = true_beta(L = L, tau = tau, actL = actL, actL_p_t = actL_p_t,
                        inactL_p_t = inactL_p_t, c = c)
@@ -70,7 +76,7 @@ runSim <- function(n,
   X_test <- X[-trn_ind, , ] # testing set for the data
 
   modFit = localMods(y = y_trn, X = X_trn, tau0 = tau0, chains = chains,
-                     warmup = warmup, iter = iter)
+                     ncores = ncores, warmup = warmup, iter = iter)
 
   fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres)
 

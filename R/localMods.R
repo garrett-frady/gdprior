@@ -3,6 +3,7 @@
 #' @param y binary response correspoding to \eqn{n} subjects
 #' @param X \eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points
 #' @param tau0 predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}
+#' @param ncores number of cores to use
 #' @param chains number of chains in MCMC algorithm - default \eqn{chains = 4}
 #' @param warmup number of iterations to throw away as burnin at the start of the mcmc run - default \eqn{warmup = 3000}
 #' @param iter number of iterations to run in each mcmc chain - default \eqn{iter = 10000}
@@ -13,6 +14,7 @@
 localMods = function(y,
                      X,
                      tau0 = 10^(-5),
+                     ncores = parallel::detectCores(),
                      chains = 4,
                      warmup = 3000,
                      iter = 10000){

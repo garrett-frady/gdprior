@@ -9,6 +9,8 @@ runSim(
   L,
   tau,
   n_trn,
+  seed = 1234,
+  ncores = parallel::detectCores(),
   N = 2 * n,
   actL = ceiling(0.2 * L),
   actL_p_t = 0.9,
@@ -33,6 +35,10 @@ runSim(
 \item{tau}{number of time points}
 
 \item{n_trn}{size of training set}
+
+\item{seed}{seed for reproducibility}
+
+\item{ncores}{number of cores to use}
 
 \item{N}{value chosen sufficiently larger than n to sample X from}
 
