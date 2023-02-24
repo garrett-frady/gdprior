@@ -65,7 +65,7 @@ runSim <- function(n,
 
   y = rbinom(n = n, size = 1, prob = 77/122)
 
-  X = genX(y = y, n = n, N = N, L = L, tau = tau, mu = mu, rho = rho, S = S)
+  X = genX(y = y, beta = beta, n = n, N = N, L = L, tau = tau, mu = mu, rho = rho, S = S)
 
   trn_ind = sample.int(n, size = n_trn) # indices of training set
 

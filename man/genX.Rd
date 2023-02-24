@@ -6,6 +6,7 @@
 \usage{
 genX(
   y,
+  beta,
   n,
   N,
   L,
@@ -17,6 +18,8 @@ genX(
 }
 \arguments{
 \item{y}{binary response vector}
+
+\item{beta}{coefficient matrix}
 
 \item{n}{number of subjects}
 

@@ -1,6 +1,7 @@
 #' Function to Generate Data Array
 #'
 #' @param y binary response vector
+#' @param beta coefficient matrix
 #' @param n number of subjects
 #' @param N value chosen sufficiently larger than n to sample X from
 #' @param L number of locations
@@ -13,6 +14,7 @@
 #' @export
 
 genX <- function(y,
+                 beta,
                  n,
                  N,
                  L,
