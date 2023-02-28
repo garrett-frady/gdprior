@@ -84,7 +84,9 @@ localMods = function(y,
 
   "
 
-  ncores = parallel::detectCores() # detect the number of cores
+  # ncores = parallel::detectCores() # detect the number of cores
+  # if the cluster is initiated, it should be closed too after foreach is executed,
+  # that is, on line 146 below
   doParallel::registerDoParallel(cores = ceiling(ncores/chains)) # initiate the cluster
   # mcmc estimation in parallel over all time points
   mcmc_sim = foreach(t = 1:tau, .combine = rbind, .inorder = TRUE,
@@ -107,6 +109,10 @@ localMods = function(y,
                        beta_init = as.list(glm(formula = y ~ X[, , t] + 0,
                                                family = "binomial")$coef)
 
+                       # if using only one chain, init_list should be a list of length 1
+                       # this is not an efficient way of initializing list since the list
+                       # length depends on the values of chains. If chains!=4 then this will
+                       # return an error
                        # list of initial values; size equivalent to num of chains
                        init_list = list(one = list(beta = beta_init,
                                                    d = d_init,
@@ -122,6 +128,8 @@ localMods = function(y,
                                                     lambda = lambda_init)
                        )
 
+                       # have seed as an argument
+                       # have cores as 1 and only parallelize over time
                        # fit stan model
                        fit = rstan::stan(model_code = modRstan, data = dat, warmup = warmup,
                                          iter = iter, seed = 2411, chains = chains, cores = chains,
