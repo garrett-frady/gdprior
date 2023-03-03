@@ -7,17 +7,27 @@
 localMods(
   y,
   X,
+  n,
+  L,
+  tau,
   tau0 = 10^(-5),
   ncores = parallel::detectCores(),
   chains = 4,
   warmup = 3000,
-  iter = 10000
+  iter = 10000,
+  stan_seed = 2411
 )
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}
 
 \item{X}{\eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points}
+
+\item{n}{number of subjects}
+
+\item{L}{number of locations}
+
+\item{tau}{number of time points}
 
 \item{tau0}{predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}}
 
@@ -28,6 +38,8 @@ localMods(
 \item{warmup}{number of iterations to throw away as burnin at the start of the mcmc run - default \eqn{warmup = 3000}}
 
 \item{iter}{number of iterations to run in each mcmc chain - default \eqn{iter = 10000}}
+
+\item{stan_seed}{seed for running stan model}
 }
 \value{
 list containing posterior mean estimates of the coefficients and MCMC samples of the coefficients

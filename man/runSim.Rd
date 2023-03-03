@@ -20,11 +20,12 @@ runSim(
   rho = 0.5,
   S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
   tau0 = 10^(-5),
-  chains = 4,
+  chains = 1,
   warmup = 3000,
   iter = 10000,
   init_thres = 1e-04,
-  bf_thres = 0.1
+  bf_thres = 0.1,
+  stan_seed = 2411
 )
 }
 \arguments{
@@ -67,6 +68,8 @@ runSim(
 \item{init_thres}{inital threshold in two stage feature extraction}
 
 \item{bf_thres}{BF threshold in two stage feature extraction}
+
+\item{stan_seed}{seed for running stan model}
 }
 \value{
 list containing important measures to report from simulation
