@@ -15,7 +15,8 @@ Suggests:
     knitr,
     rmarkdown
 VignetteBuilder: knitr
-Imports: 
+Imports:
+    english,
     MASS,
     LearnBayes,
     doParallel,

@@ -20,6 +20,7 @@
 #' @param iter total number of iterations
 #' @param init_thres inital threshold in two stage feature extraction
 #' @param bf_thres BF threshold in two stage feature extraction
+#' @param stan_seed seed for running stan model
 #'
 #' @return list containing important measures to report from simulation
 #' @export
@@ -30,6 +31,7 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom stats glm runif rbinom
 #' @importFrom LearnBayes laplace
+#' @importFrom english as.english
 #' @import foreach
 
 runSim <- function(n,
@@ -47,11 +49,12 @@ runSim <- function(n,
                    rho = 0.5,
                    S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
                    tau0 = 10^(-5),
-                   chains = 4,
+                   chains = 1,
                    warmup = 3000,
                    iter = 10000,
                    init_thres = 0.0001,
-                   bf_thres = 0.1
+                   bf_thres = 0.1,
+                   stan_seed = 2411
 
 ) {
 
@@ -75,8 +78,9 @@ runSim <- function(n,
   X_trn <- X[trn_ind, , ] # training set for the data
   X_test <- X[-trn_ind, , ] # testing set for the data
 
-  modFit = localMods(y = y_trn, X = X_trn, tau0 = tau0, chains = chains,
-                     ncores = ncores, warmup = warmup, iter = iter)
+  modFit = localMods(y = y_trn, X = X_trn, n = n, L = L, tau = tau, tau0 = tau0,
+                     chains = chains, ncores = ncores, warmup = warmup,
+                     iter = iter, stan_seed = stan_seed)
 
   fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres)
 
