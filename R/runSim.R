@@ -31,7 +31,6 @@
 #' @importFrom doParallel registerDoParallel
 #' @importFrom stats glm runif rbinom
 #' @importFrom LearnBayes laplace
-#' @importFrom english as.english
 #' @import foreach
 
 runSim <- function(n,

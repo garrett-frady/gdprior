@@ -91,6 +91,7 @@ localMods = function(y,
   # if there is one core available for running the local models, we use a ...
   # ... for loop; otherwise, we use a foreach loop
   if (ceiling(ncores/chains) == 1) {
+    print("pickle")
     b_ests = matrix(NA, nrow = L, ncol = tau)
     b_samps = matrix(NA, nrow = chains*(iter - warmup), ncol = L*tau)
 
@@ -115,9 +116,9 @@ localMods = function(y,
       # list of initial values; size equivalent to num of chains
       init_list = list()
       for(j in 1:chains) {
-        init_list[[as.english(j)]] = list(beta = beta_init,
-                                          d = d_init,
-                                          lambda = lambda_init)
+        init_list[[paste0("chain_", j)]] = list(beta = beta_init,
+                                                d = d_init,
+                                                lambda = lambda_init)
       }
 
       # fit stan model
@@ -159,14 +160,14 @@ localMods = function(y,
                          # list of initial values; size equivalent to num of chains
                          init_list = list()
                          for(j in 1:chains) {
-                           init_list[[as.english(j)]] = list(beta = beta_init,
-                                                             d = d_init,
-                                                             lambda = lambda_init)
+                           init_list[[paste0("chain_", j)]] = list(beta = beta_init,
+                                                                   d = d_init,
+                                                                   lambda = lambda_init)
                          }
 
                          # fit stan model
                          fit = rstan::stan(model_code = modRstan, data = dat, warmup = warmup,
-                                           iter = iter, seed = 2411, chains = chains,
+                                           iter = iter, seed = stan_seed, chains = chains,
                                            cores = chains, init = init_list)
 
                          # mcmc estimates of beta coefficients - posterior mean over all chains
