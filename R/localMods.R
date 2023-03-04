@@ -126,15 +126,23 @@ localMods = function(y,
                         cores = chains, init = init_list)
 
       # mcmc estimates of beta coefficients - posterior mean over all chains
-      mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+      mcmc_ests = matrix(nrow = L, ncol = tau)
+      if (chains == 1) {
+        mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains]
+      } else {
+        mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+      }
+      # mcmc samples
       beta_samps = rstan::extract(fit)$beta
 
       b_ests[, t] = mcmc_ests
       b_samps[, ((t - 1)*L + 1):(L*t)] = beta_samps
     }
   } else {
+    # specify cluster with the specified number of cores
+    cl = parallel::makeCluster(ncores)
     # initiate the cluster
-    doParallel::registerDoParallel(cores = ceiling(ncores/chains))
+    doParallel::registerDoParallel(cl = cl, cores = ceiling(ncores/chains))
     # mcmc estimation in parallel over all time points
     mcmc_sim = foreach(t = 1:tau, .combine = rbind, .inorder = TRUE,
                        .errorhandling = "pass", .packages = c('rstan')) %dopar% {
@@ -170,13 +178,20 @@ localMods = function(y,
                                            cores = chains, init = init_list)
 
                          # mcmc estimates of beta coefficients - posterior mean over all chains
-                         mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+                         mcmc_ests = matrix(nrow = L, ncol = tau)
+                         if (chains == 1) {
+                           mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains]
+                         } else {
+                           mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+                         }
                          beta_samps = rstan::extract(fit)$beta
 
                          list(b_ests = mcmc_ests,
                               b_samps = beta_samps)
 
                        }
+
+    parallel::stopCluster(cl) # Stop cluster
 
     # L x tau matrix of posterior mean estimates of beta - cbind vectors ...
     # ... from each time point
