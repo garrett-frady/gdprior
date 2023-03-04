@@ -2,7 +2,7 @@
 #'
 #' @param y binary response correspoding to \eqn{n} subjects
 #' @param X \eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points
-#' @param n number of subjects
+#' @param n_trn size of training set
 #' @param L number of locations
 #' @param tau number of time points
 #' @param tau0 predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}
@@ -17,7 +17,7 @@
 
 localMods = function(y,
                      X,
-                     n,
+                     n_trn,
                      L,
                      tau,
                      tau0 = tau0,
@@ -91,14 +91,13 @@ localMods = function(y,
   # if there is one core available for running the local models, we use a ...
   # ... for loop; otherwise, we use a foreach loop
   if (ceiling(ncores/chains) == 1) {
-    print("pickle")
     b_ests = matrix(NA, nrow = L, ncol = tau)
     b_samps = matrix(NA, nrow = chains*(iter - warmup), ncol = L*tau)
 
     for (t in 1:tau) {
       # data list for local stan model at time point t
       dat = list(
-        n = as.integer(n),
+        n = as.integer(n_trn),
         L = as.integer(L),
         X = X[, , t], # n x L local data matrix
         y = y,
@@ -142,7 +141,7 @@ localMods = function(y,
 
                          # data list for local stan model at time point t
                          dat = list(
-                           n = as.integer(n),
+                           n = as.integer(n_trn),
                            L = as.integer(L),
                            X = X[, , t], # n x L local data matrix
                            y = y,

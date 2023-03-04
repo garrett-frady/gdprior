@@ -7,7 +7,7 @@
 localMods(
   y,
   X,
-  n,
+  n_trn,
   L,
   tau,
   tau0 = tau0,
@@ -23,7 +23,7 @@ localMods(
 
 \item{X}{\eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points}
 
-\item{n}{number of subjects}
+\item{n_trn}{size of training set}
 
 \item{L}{number of locations}
 

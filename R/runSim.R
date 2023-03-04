@@ -77,9 +77,9 @@ runSim <- function(n,
   X_trn <- X[trn_ind, , ] # training set for the data
   X_test <- X[-trn_ind, , ] # testing set for the data
 
-  modFit = localMods(y = y_trn, X = X_trn, n = n, L = L, tau = tau, tau0 = tau0,
-                     chains = chains, ncores = ncores, warmup = warmup,
-                     iter = iter, stan_seed = stan_seed)
+  modFit = localMods(y = y_trn, X = X_trn, n_trn = n_trn, L = L, tau = tau,
+                     tau0 = tau0, chains = chains, ncores = ncores,
+                     warmup = warmup, iter = iter, stan_seed = stan_seed)
 
   fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres)
 
