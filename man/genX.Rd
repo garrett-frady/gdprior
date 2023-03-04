@@ -4,17 +4,7 @@
 \alias{genX}
 \title{Function to Generate Data Array}
 \usage{
-genX(
-  y,
-  beta,
-  n,
-  N,
-  L,
-  tau,
-  mu = rep(0, L),
-  rho = 0.5,
-  S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L))))
-)
+genX(y, beta, n, N, L, tau, mu = mu, rho = rho, S = S)
 }
 \arguments{
 \item{y}{binary response vector}

@@ -20,12 +20,12 @@ localMods = function(y,
                      n,
                      L,
                      tau,
-                     tau0 = 10^(-5),
-                     ncores = parallel::detectCores(),
-                     chains = 4,
-                     warmup = 3000,
-                     iter = 10000,
-                     stan_seed = 2411){
+                     tau0 = tau0,
+                     ncores = ncores,
+                     chains = chains,
+                     warmup = warmup,
+                     iter = iter,
+                     stan_seed = stan_seed){
 
   # rstan MCMC code for the GD model
   modRstan = "

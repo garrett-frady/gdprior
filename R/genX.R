@@ -19,9 +19,9 @@ genX <- function(y,
                  N,
                  L,
                  tau,
-                 mu = rep(0, L),
-                 rho = 0.5,
-                 S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L))))
+                 mu = mu,
+                 rho = rho,
+                 S = S
                  ) {
 
   # U array; entries will be generated within the simulation at each replication

@@ -11,7 +11,7 @@
 #' @export
 
 bf_fn <- function(bin_vec, # vector of 0's and 1's
-                  log.K = seq(0, 100, by = 0.1)) {
+                  log.K = log.K) {
 
   ################ functions ####################
   betageom.bf.K = function(theta, s) {
