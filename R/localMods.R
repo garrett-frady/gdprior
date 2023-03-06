@@ -140,9 +140,9 @@ localMods = function(y,
     }
   } else {
     # specify cluster with the specified number of cores
-    cl = parallel::makeCluster(ncores)
+    # cl = parallel::makeCluster(ncores)
     # initiate the cluster
-    doParallel::registerDoParallel(cl = cl, cores = ceiling(ncores/chains))
+    doParallel::registerDoParallel(cores = ceiling(ncores/chains))
     # mcmc estimation in parallel over all time points
     mcmc_sim = foreach(t = 1:tau, .combine = rbind, .inorder = TRUE,
                        .errorhandling = "pass", .packages = c('rstan')) %dopar% {
@@ -191,7 +191,7 @@ localMods = function(y,
 
                        }
 
-    parallel::stopCluster(cl) # Stop cluster
+    # parallel::stopCluster(cl) # Stop cluster
 
     # L x tau matrix of posterior mean estimates of beta - cbind vectors ...
     # ... from each time point

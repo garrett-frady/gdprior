@@ -27,7 +27,7 @@
 #'
 #' @importFrom MASS mvrnorm
 #' @importFrom rstan stan get_posterior_mean extract
-#' @importFrom parallel detectCores makeCluster stopCluster
+#' @importFrom parallel detectCores
 #' @importFrom doParallel registerDoParallel
 #' @importFrom stats glm runif rbinom
 #' @importFrom LearnBayes laplace
