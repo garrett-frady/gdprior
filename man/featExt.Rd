@@ -4,7 +4,7 @@
 \alias{featExt}
 \title{Performing two-stage feature extraction}
 \usage{
-featExt(b, init_thres, bf_thres)
+featExt(b, init_thres, bf_thres, L, tau)
 }
 \arguments{
 \item{b}{\eqn{L} x \eqn{tau} matrix of estimates of beta}
@@ -12,6 +12,10 @@ featExt(b, init_thres, bf_thres)
 \item{init_thres}{threshold in first stage to induce sparsity}
 
 \item{bf_thres}{threshold to be used to compare Bayes factor}
+
+\item{L}{number of locations}
+
+\item{tau}{number of time points}
 }
 \value{
 list containing nonzero estimates after first stage, active indices according to the second stage, and vector of maxBF values

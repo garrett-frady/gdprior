@@ -81,7 +81,8 @@ runSim <- function(n,
                      tau0 = tau0, chains = chains, ncores = ncores,
                      warmup = warmup, iter = iter, stan_seed = stan_seed)
 
-  fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres)
+  fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres,
+                 L = L, tau = tau)
 
   final_ests = fExt$n0b_ests
   final_ests[-c(fExt$bInd), ] = 0

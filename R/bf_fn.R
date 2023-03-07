@@ -11,7 +11,7 @@
 #' @export
 
 bf_fn <- function(bin_vec, # vector of 0's and 1's
-                  log.K = log.K) {
+                  log.K = seq(0, 3, 0.1)) {
 
   ################ functions ####################
   betageom.bf.K = function(theta, s) {
@@ -48,7 +48,6 @@ bf_fn <- function(bin_vec, # vector of 0's and 1's
   }
 
   ################################################
-
   log.BF=sapply(log.K, compute.log.bf.K, bin_vec)
   max.log.BF=max(0, max(log.BF))
   max.log.K=ifelse(max.log.BF>0,

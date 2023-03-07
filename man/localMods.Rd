@@ -4,19 +4,7 @@
 \alias{localMods}
 \title{Constructing Local Models in Parallel}
 \usage{
-localMods(
-  y,
-  X,
-  n_trn,
-  L,
-  tau,
-  tau0 = tau0,
-  ncores = ncores,
-  chains = chains,
-  warmup = warmup,
-  iter = iter,
-  stan_seed = stan_seed
-)
+localMods(y, X, n_trn, L, tau, tau0, ncores, chains, warmup, iter, stan_seed)
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}

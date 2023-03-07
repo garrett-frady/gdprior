@@ -14,10 +14,10 @@
 
 true_beta = function(L,
                      tau,
-                     actL = actL,
-                     actL_p_t = actL_p_t,
-                     inactL_p_t = inactL_p_t,
-                     c = c) {
+                     actL,
+                     actL_p_t,
+                     inactL_p_t,
+                     c) {
 
   # matrix to store randomly generated beta coefficients in - L x tau
   beta = matrix(nrow = L, ncol = tau)

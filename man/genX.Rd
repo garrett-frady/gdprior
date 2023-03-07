@@ -4,7 +4,7 @@
 \alias{genX}
 \title{Function to Generate Data Array}
 \usage{
-genX(y, beta, n, N, L, tau, mu = mu, rho = rho, S = S)
+genX(y, beta, n, N, L, tau, mu, rho, S)
 }
 \arguments{
 \item{y}{binary response vector}

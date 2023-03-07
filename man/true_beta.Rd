@@ -4,14 +4,7 @@
 \alias{true_beta}
 \title{Generate true beta coefficients}
 \usage{
-true_beta(
-  L,
-  tau,
-  actL = actL,
-  actL_p_t = actL_p_t,
-  inactL_p_t = inactL_p_t,
-  c = c
-)
+true_beta(L, tau, actL, actL_p_t, inactL_p_t, c)
 }
 \arguments{
 \item{L}{number of locations}
