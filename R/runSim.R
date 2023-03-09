@@ -21,6 +21,7 @@
 #' @param init_thres inital threshold in two stage feature extraction
 #' @param bf_thres BF threshold in two stage feature extraction
 #' @param stan_seed seed for running stan model
+#' @param log.K values to consider for K, parameter in beta distribution for the passive model
 #'
 #' @return list containing important measures to report from simulation
 #' @export
@@ -43,7 +44,7 @@ runSim <- function(n,
                    actL = ceiling(0.2*L),
                    actL_p_t = 0.9,
                    inactL_p_t = 0.1,
-                   c = 3,
+                   c = 5,
                    mu = rep(0, L),
                    rho = 0.5,
                    S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
@@ -51,9 +52,10 @@ runSim <- function(n,
                    chains = 1,
                    warmup = 3000,
                    iter = 10000,
-                   init_thres = 0.0001,
+                   init_thres = 10^(-4),
                    bf_thres = 0.1,
-                   stan_seed = 2411
+                   stan_seed = 2411,
+                   log.K = seq(0, 5, 0.1)
 
 ) {
 
@@ -82,7 +84,7 @@ runSim <- function(n,
                      warmup = warmup, iter = iter, stan_seed = stan_seed)
 
   fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres,
-                 L = L, tau = tau)
+                 L = L, tau = tau, log.K = log.K)
 
   final_ests = fExt$n0b_ests
   final_ests[-c(fExt$bInd), ] = 0

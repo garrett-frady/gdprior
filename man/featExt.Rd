@@ -4,7 +4,7 @@
 \alias{featExt}
 \title{Performing two-stage feature extraction}
 \usage{
-featExt(b, init_thres, bf_thres, L, tau)
+featExt(b, init_thres, bf_thres, L, tau, log.K)
 }
 \arguments{
 \item{b}{\eqn{L} x \eqn{tau} matrix of estimates of beta}
@@ -16,6 +16,8 @@ featExt(b, init_thres, bf_thres, L, tau)
 \item{L}{number of locations}
 
 \item{tau}{number of time points}
+
+\item{log.K}{values to consider for K, parameter in beta distribution for the passive model}
 }
 \value{
 list containing nonzero estimates after first stage, active indices according to the second stage, and vector of maxBF values

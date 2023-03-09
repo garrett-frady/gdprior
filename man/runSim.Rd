@@ -15,7 +15,7 @@ runSim(
   actL = ceiling(0.2 * L),
   actL_p_t = 0.9,
   inactL_p_t = 0.1,
-  c = 3,
+  c = 5,
   mu = rep(0, L),
   rho = 0.5,
   S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
@@ -23,9 +23,10 @@ runSim(
   chains = 1,
   warmup = 3000,
   iter = 10000,
-  init_thres = 1e-04,
+  init_thres = 10^(-4),
   bf_thres = 0.1,
-  stan_seed = 2411
+  stan_seed = 2411,
+  log.K = seq(0, 5, 0.1)
 )
 }
 \arguments{
@@ -70,6 +71,8 @@ runSim(
 \item{bf_thres}{BF threshold in two stage feature extraction}
 
 \item{stan_seed}{seed for running stan model}
+
+\item{log.K}{values to consider for K, parameter in beta distribution for the passive model}
 }
 \value{
 list containing important measures to report from simulation

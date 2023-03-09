@@ -5,6 +5,7 @@
 #' @param bf_thres threshold to be used to compare Bayes factor
 #' @param L number of locations
 #' @param tau number of time points
+#' @param log.K values to consider for K, parameter in beta distribution for the passive model
 #'
 #' @return list containing nonzero estimates after first stage, active indices according to the second stage, and vector of maxBF values
 #' @export
@@ -13,7 +14,8 @@ featExt = function(b,
                    init_thres,
                    bf_thres,
                    L,
-                   tau) {
+                   tau,
+                   log.K) {
 
   ######################################
   ### First-stage feature extraction ###
@@ -33,7 +35,7 @@ featExt = function(b,
       maxBF[l] = -10
     } else if(sum(b_bin[l, ]) == tau) {
       maxBF[l] = bf_thres
-    } else maxBF[l] = bf_fn(b_bin[l, ])$max.log.BF
+    } else maxBF[l] = bf_fn(b_bin[l, ], log.K = log.K)$max.log.BF
   }
 
   bInd = which(maxBF >= bf_thres)
