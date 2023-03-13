@@ -91,7 +91,7 @@ localMods = function(y,
   # if there is one core available for running the local models, we use a ...
   # ... for loop; otherwise, we use a foreach loop
   if (ceiling(ncores/chains) == 1) {
-    b_ests = matrix(NA, nrow = L, ncol = tau)
+    b_ests = d_ests = matrix(NA, nrow = L, ncol = tau)
     b_samps = matrix(NA, nrow = chains*(iter - warmup), ncol = L*tau)
 
     for (t in 1:tau) {
@@ -126,16 +126,19 @@ localMods = function(y,
                         cores = chains, init = init_list)
 
       # mcmc estimates of beta coefficients - posterior mean over all chains
-      mcmc_ests = matrix(nrow = L, ncol = tau)
+      mcmc_ests = d_mcmc_ests = matrix(nrow = L, ncol = tau)
       if (chains == 1) {
         mcmc_ests[, t] = rstan::get_posterior_mean(fit, par = "beta")[, chains]
+        d_mcmc_ests[, t] = rstan::get_posterior_mean(fit, par = "d")[, chains]
       } else {
         mcmc_ests[, t] = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+        d_mcmc_ests[, t] = rstan::get_posterior_mean(fit, par = "d")[, chains + 1]
       }
       # mcmc samples
       beta_samps = rstan::extract(fit)$beta
 
       b_ests[, t] = mcmc_ests
+      d_ests[, t] = d_mcmc_ests
       b_samps[, ((t - 1)*L + 1):(L*t)] = beta_samps
     }
   } else {
@@ -179,15 +182,18 @@ localMods = function(y,
                                            cores = chains, init = init_list)
 
                          # mcmc estimates of beta coefficients - posterior mean over all chains
-                         mcmc_ests = rep(NA, L)
+                         mcmc_ests = d_mcmc_ests = rep(NA, L)
                          if (chains == 1) {
                            mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains]
+                           d_mcmc_ests = rstan::get_posterior_mean(fit, par = "d")[, chains]
                          } else {
                            mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains + 1]
+                           d_mcmc_ests = rstan::get_posterior_mean(fit, par = "d")[, chains + 1]
                          }
                          beta_samps = rstan::extract(fit)$beta
 
                          list(b_ests = mcmc_ests,
+                              d_ests = d_mcmc_ests,
                               b_samps = beta_samps)
 
                        }
@@ -197,6 +203,7 @@ localMods = function(y,
     # L x tau matrix of posterior mean estimates of beta - cbind vectors ...
     # ... from each time point
     b_ests = do.call(cbind, mcmc_sim[, "b_ests"])
+    d_ests = do.call(cbind, mcmc_sim[, "d_ests"])
     b_samps = do.call(cbind, mcmc_sim[, "b_samps"])
 
   }
@@ -204,5 +211,6 @@ localMods = function(y,
   # return the estimates of parameters obtained from the MCMC samples and ...
   # ... the MCMC samples, after building all the local models.
   list(b_ests = b_ests,
+       d_ests = d_ests,
        b_samps = b_samps)
 }
