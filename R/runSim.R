@@ -99,6 +99,7 @@ runSim <- function(n,
 
   list(beta = beta,
        act_ind = act_ind,
+       d_ests = modFit$d_ests,
        beta_ests = modFit$b_ests,
        beta_samps = modFit$b_samps,
        n0beta_ests = fExt$n0b_ests,
