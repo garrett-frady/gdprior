@@ -18,10 +18,10 @@
 #' @param chains number of MCMC chains
 #' @param warmup number of warmup iterations
 #' @param iter total number of iterations
-#' @param init_thres inital threshold in two stage feature extraction
-#' @param bf_thres BF threshold in two stage feature extraction
+#' @param alpha significance level used to compute chi-squared threshold in second stage; controls selection rate
+#' @param stage1_thres threshold in first stage to induce sparsity; fixed quantity chosen sufficiently small
+#' @param stage2_thres threshold in second stage; chi-squared upper (1 - alpha)-quantile
 #' @param stan_seed seed for running stan model
-#' @param log.K values to consider for K, parameter in beta distribution for the passive model
 #'
 #' @return list containing important measures to report from simulation
 #' @export
@@ -30,8 +30,7 @@
 #' @importFrom rstan stan get_posterior_mean extract
 #' @importFrom parallel detectCores
 #' @importFrom doParallel registerDoParallel
-#' @importFrom stats glm runif rbinom
-#' @importFrom LearnBayes laplace
+#' @importFrom stats glm runif rbinom qchisq
 #' @import foreach
 
 runSim <- function(n,
@@ -52,11 +51,10 @@ runSim <- function(n,
                    chains = 1,
                    warmup = 3000,
                    iter = 10000,
-                   init_thres = 10^(-4),
-                   bf_thres = 0.1,
-                   stan_seed = 2411,
-                   log.K = seq(0, 5, 0.1)
-
+                   alpha = 0.05,
+                   stage1_thres = 10^(-3),
+                   stage2_thres = qchisq(p = 1 - alpha, df = tau),
+                   stan_seed = 2411
 ) {
 
   # set seed for reprodicibility
@@ -83,8 +81,9 @@ runSim <- function(n,
                      tau0 = tau0, chains = chains, ncores = ncores,
                      warmup = warmup, iter = iter, stan_seed = stan_seed)
 
-  fExt = featExt(b = modFit$b_ests, init_thres = init_thres, bf_thres = bf_thres,
-                 L = L, tau = tau, log.K = log.K)
+  fExt = featExt(b = modFit$b_ests, d = modFit$d_ests,
+                 L = L, tau = tau, alpha = alpha,
+                 stage1_thres = stage1_thres, stage2_thres = stage2_thres)
 
   final_ests = fExt$n0b_ests
   final_ests[-c(fExt$bInd), ] = 0

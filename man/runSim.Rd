@@ -23,10 +23,10 @@ runSim(
   chains = 1,
   warmup = 3000,
   iter = 10000,
-  init_thres = 10^(-4),
-  bf_thres = 0.1,
-  stan_seed = 2411,
-  log.K = seq(0, 5, 0.1)
+  alpha = 0.05,
+  stage1_thres = 10^(-3),
+  stage2_thres = qchisq(p = 1 - alpha, df = tau),
+  stan_seed = 2411
 )
 }
 \arguments{
@@ -66,13 +66,13 @@ runSim(
 
 \item{iter}{total number of iterations}
 
-\item{init_thres}{inital threshold in two stage feature extraction}
+\item{alpha}{significance level used to compute chi-squared threshold in second stage; controls selection rate}
 
-\item{bf_thres}{BF threshold in two stage feature extraction}
+\item{stage1_thres}{threshold in first stage to induce sparsity; fixed quantity chosen sufficiently small}
+
+\item{stage2_thres}{threshold in second stage; chi-squared upper (1 - alpha)-quantile}
 
 \item{stan_seed}{seed for running stan model}
-
-\item{log.K}{values to consider for K, parameter in beta distribution for the passive model}
 }
 \value{
 list containing important measures to report from simulation

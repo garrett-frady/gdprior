@@ -4,23 +4,25 @@
 \alias{featExt}
 \title{Performing two-stage feature extraction}
 \usage{
-featExt(b, init_thres, bf_thres, L, tau, log.K)
+featExt(b, d, L, tau, alpha, stage1_thres, stage2_thres)
 }
 \arguments{
-\item{b}{\eqn{L} x \eqn{tau} matrix of estimates of beta}
+\item{b}{\eqn{L \times \tau} matrix of estimates of beta; posterior means of MCMC samples}
 
-\item{init_thres}{threshold in first stage to induce sparsity}
-
-\item{bf_thres}{threshold to be used to compare Bayes factor}
+\item{d}{\eqn{L \times \tau} matrix of estimates of auxiliary variable d; posterior means of MCMC samples}
 
 \item{L}{number of locations}
 
 \item{tau}{number of time points}
 
-\item{log.K}{values to consider for K, parameter in beta distribution for the passive model}
+\item{alpha}{significance level used to compute chi-squared threshold in second stage; controls selection rate}
+
+\item{stage1_thres}{threshold in first stage to induce sparsity; fixed quantity chosen sufficiently small}
+
+\item{stage2_thres}{threshold in second stage; chi-squared upper (1 - alpha)-quantile}
 }
 \value{
-list containing nonzero estimates after first stage, active indices according to the second stage, and vector of maxBF values
+list containing nonzero estimates after first stage, active indices according to the second stage
 }
 \description{
 Performing two-stage feature extraction
