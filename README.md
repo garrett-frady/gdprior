@@ -173,6 +173,8 @@ for (i in 1:n) {
   
   fit = localMods(y = y_trn, 
                   X = X_trn,
+                  tau_st = 1,
+                  tau_end = tau,
                   tau0 = tau0,
                   modRstan = modRstan,
                   chains = chains,
