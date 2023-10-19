@@ -80,20 +80,6 @@ Permutate the dimensions of the data
 X = aperm(X, c(3, 2, 1))
 ```
 
-### Prepare arguments to run models using LOOCV in parallel
-
-Training and testing sets for LOOCV
-
-``` r
-trn_ind = (1:n)[-curr_iter]
-
-y_trn = y[trn_ind] # training set for the response vector
-y_test = y[-trn_ind] # testing set for the response vector
-
-X_trn = X[trn_ind, , ] # training set for the data - not scaled 
-X_test = X[-trn_ind, , ] # testing set for the data - not scaled
-```
-
 ### Construct local Bayesian models in parallel
 
 Initialize hyperparameters
