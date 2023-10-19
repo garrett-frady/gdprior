@@ -166,7 +166,7 @@ y_test = c() # vector of individual subject responses in test set
 X_test = list() # list of data matrices (for indivual subjects) in test set
 
 bSampsList = list()
-# LOOCV
+# LOOCV - This should be done on a server or a compuder with multiple nodes. 
 for (i in 1:n) {
   trn_ind = (1:n)[-i] # training indices
   y_trn = y[trn_ind] # training set for the response vector
@@ -186,7 +186,7 @@ for (i in 1:n) {
                   iter = iter,
                   stan_seed = stan_seed)
                
-  bSampsList[i] = fit$b_samps
+  bSampsList[[i]] = fit$b_samps
 }
 ```
 
@@ -218,10 +218,10 @@ wPred = c() # weighted sum statistic for each subject
 p_it = list() # local probabilities for each subject
 w_it = list() # local weights for each subject
 for (i in 1:n) {
-  predObj = predWeightedLOOCV(b_ests = n0b[[i]],
-                              bInd = 1:57, 
-                              X_test = X_test[[i]],
-                              thres = 0.5)
+  predObj = predWeighted(b_ests = n0b[[i]],
+                         bInd = 1:57, 
+                         X_test = X_test[[i]],
+                         thres = 0.5)
   wPred[i] = predObj$weightedPred
   yp[i] = predObj$y_p
   p_it[[i]] = predObj$p_it
@@ -246,10 +246,10 @@ Calculate prediction error rates using the best threshold obtained from the ROC 
 yp_bThres = c()
 wPred_bThres = c()
 for (i in 1:n) {
-  predObj = predWeightedLOOCV(b_ests = n0b[[i]],
-                              bInd = 1:57,
-                              X_test = X_test[[i]],
-                              thres = as.numeric(bestThres))
+  predObj = predWeighted(b_ests = n0b[[i]],
+                         bInd = 1:57,
+                         X_test = X_test[[i]],
+                         thres = as.numeric(bestThres))
   wPred_bThres[i] = ypred$weightedPred
   yp_bThres[i] = ypred$y_p
 }
