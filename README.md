@@ -4,9 +4,8 @@
 # gdprior
 
 <!-- badges: start -->
+<!-- [![Travis build status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://travis-ci.com/garrett-frady/gdprior) -->
 
-[![Travis build
-status](https://travis-ci.com/garrett-frady/gdprior.svg?branch=master)](https://travis-ci.com/garrett-frady/gdprior)
 [![AppVeyor build
 status](https://ci.appveyor.com/api/projects/status/github/garrett-frady/gdprior?branch=master&svg=true)](https://ci.appveyor.com/project/garrett-frady/gdprior)
 <!-- badges: end -->
@@ -17,6 +16,13 @@ Spatio-Temporal Data by Local Modeling.”
 
 Code to perform estimation, feature extraction, and prediction under the
 GD prior structure.
+
+## Contents
+
+1.  Load EEG data and permutate the dimensions of the data array
+2.  Construct local Bayesian models in parallel
+3.  Perform two-stage feature extraction using MCMC samples
+4.  Subject-level predictions of alcoholic status
 
 ## Installation
 
@@ -29,38 +35,234 @@ devtools::install_github('garrett-frady/gdprior')
 library(gdprior)
 ```
 
-## Example
+### Load EEG data and permutate the dimensions of the data array
 
-This is a basic example which shows you how to solve a common problem:
-
-``` r
-library(gdprior)
-## basic example code
-```
-
-What is special about using `README.Rmd` instead of just `README.md`?
-You can include R chunks like so:
+Load EEG data
 
 ``` r
-summary(cars)
-#>      speed           dist       
-#>  Min.   : 4.0   Min.   :  2.00  
-#>  1st Qu.:12.0   1st Qu.: 26.00  
-#>  Median :15.0   Median : 36.00  
-#>  Mean   :15.4   Mean   : 42.98  
-#>  3rd Qu.:19.0   3rd Qu.: 56.00  
-#>  Max.   :25.0   Max.   :120.00
+# 256 x 64 x 122
+load(file = "X.rdata")
 ```
 
-You’ll still need to render `README.Rmd` regularly, to keep `README.md`
-up-to-date. `devtools::build_readme()` is handy for this. You could also
-use GitHub Actions to re-render `README.Rmd` every time you push. An
-example workflow can be found here:
-<https://github.com/r-lib/actions/tree/v1/examples>.
+Load indices of locations which have associated coordinates in the data
 
-You can also embed plots, for example:
+``` r
+load(file = "ind64to57.rdata")
+```
 
-<img src="man/figures/README-pressure-1.png" width="100%" />
+Update data to only the 57 locations with coordinates
 
-In that case, don’t forget to commit and push the resulting figure
-files, so they display on GitHub and CRAN.
+``` r
+X = X[, ind64to57, ] 
+```
+
+Load binary response and transform into vector
+
+``` r
+# 122 x 1
+load(file = "y.rdata")
+y = as.vector(t(y))
+```
+
+Store dimensions of data as variables
+
+``` r
+##### data setup #####
+tau = dim(X)[1] # number of time points
+L = dim(X)[2] # number of locations
+n = dim(X)[3] # number of subjects
+```
+
+Permutate the dimensions of the data
+
+``` r
+# 122 x 57 x 256
+X = aperm(X, c(3, 2, 1))
+```
+
+### Prepare arguments to run models using LOOCV in parallel
+
+Training and testing sets for LOOCV
+
+``` r
+trn_ind = (1:n)[-curr_iter]
+
+y_trn = y[trn_ind] # training set for the response vector
+y_test = y[-trn_ind] # testing set for the response vector
+
+X_trn = X[trn_ind, , ] # training set for the data - not scaled 
+X_test = X[-trn_ind, , ] # testing set for the data - not scaled
+```
+
+### Construct local Bayesian models in parallel
+
+Initialize hyperparameters
+
+``` r
+tau0 = 10^(-5)
+
+chains = 1
+warmup = 300
+iter = 1000
+stan_seed = 2411
+
+# for feature extraction
+stage1_thres = 0.001 # threshold used in the FDR approach (0.001)
+FDRc = 0.05 # control FDR level 
+```
+
+Define the model object for stan
+
+``` r
+modRstan = "
+
+  functions {
+      
+    vector colSums(matrix M) {
+      int ncol;
+      vector[cols(M)] sums;
+      ncol = cols(M);
+      for (i in 1:ncol) {
+        sums[i] = sum(M[, i]);
+      }
+      return(sums);
+    }
+    
+  }
+
+  data {
+    
+    int<lower = 0> n;
+    int<lower = 0> L;
+    matrix[n, L] X;
+    int<lower = 0, upper = 1> y[n];
+    real<lower = 10^(-10)> tau0;
+
+  }
+
+  transformed data {
+
+    vector[L] tXX_diag;
+    tXX_diag = colSums(X .* X);
+    
+  }
+
+  parameters {
+
+    vector[L] beta; 
+    vector<lower = 0>[L] d;
+    real<lower = 0> lambda;
+
+  }
+
+  model {
+
+    lambda ~ gamma(0.1, 0.2);
+    for (j in 1:L) {
+      d[j] ~ gamma(lambda + 0.5, tau0^2/(2*tXX_diag[j]));
+    }
+    for (j in 1:L) {
+      beta[j] ~ normal(0, sqrt(1/d[j]));
+    }
+    y ~ bernoulli_logit_glm(X, 0, beta);
+
+  }  "
+```
+
+Fit the model and obtain MCMC samples of coefficients using LOOCV
+
+``` r
+y_test = c() # vector of individual subject responses in test set
+X_test = list() # list of data matrices (for indivual subjects) in test set
+
+bSampsList = list()
+# LOOCV
+for (i in 1:n) {
+  trn_ind = (1:n)[-i] # training indices
+  y_trn = y[trn_ind] # training set for the response vector
+  X_trn = X[trn_ind, , ] # training set for the data 
+  
+  y_test[i] = y[-trn_ind] # store for later
+  X_test[[i]] = X[-trn_ind, , ] # store for later
+  
+  fit = localMods(y = y_trn, 
+                  X = X_trn,
+                  tau0 = tau0,
+                  modRstan = modRstan,
+                  chains = chains,
+                  warmup = warmup,
+                  iter = iter,
+                  stan_seed = stan_seed)
+               
+  bSampsList[i] = fit$b_samps
+}
+```
+
+### Perform two-stage feature extraction using MCMC estimates
+
+Two-Stage feature extraction
+
+``` r
+# feature extraction
+fExt <- lapply(bSampsList, twoStage_featExt, L, tau, stage1_thres, FDRc)
+
+# selected locations and estimates from feature extraction
+bInd = list()
+n0b = list()
+for (i in 1:n) {
+  bInd[[i]] = fExt[[i]]$bInd
+  n0b[[i]] = fExt[[i]]$n0b_ests
+}
+```
+
+### Subject-level predictions of alcoholic status
+
+Compute local probabilities, local weights, weighted predictions, and
+final predictions
+
+``` r
+# final predictions
+yp = c() # subject-level predictions
+wPred = c() # weighted sum statistic for each subject
+p_it = list() # local probabilities for each subject
+w_it = list() # local weights for each subject
+for (i in 1:n) {
+  predObj = predWeightedLOOCV(b_ests = n0b[[i]],
+                              bInd = 1:57, 
+                              X_test = X_test[[i]],
+                              thres = 0.5)
+  wPred[i] = predObj$weightedPred
+  yp[i] = predObj$y_p
+  p_it[[i]] = predObj$p_it
+  w_it[[i]] = predObj$w_it
+}
+```
+
+Calculate prediction error rates and AUC
+
+``` r
+predRates = rates_pred(y_test, yp)
+
+LOOCV_ROC = pROC::roc(y_test, wPred)
+LOOCV_AUC = LOOCV_ROC$auc
+bestThres = pROC::coords(LOOCV_ROC, "best", ret = "threshold") # store best threshold
+```
+
+Calculate prediction error rates using the best threshold obtained from
+the ROC curve
+
+``` r
+# store predictions from using the best threshold obtained from ROC curve
+yp_bThres = c()
+wPred_bThres = c()
+for (i in 1:n) {
+  predObj = predWeightedLOOCV(b_ests = n0b[[i]],
+                              bInd = 1:57,
+                              X_test = X_test[[i]],
+                              thres = as.numeric(bestThres))
+  wPred_bThres[i] = ypred$weightedPred
+  yp_bThres[i] = ypred$y_p
+}
+
+predRates_bThres = rates_pred(y_test, yp_bThres)
+```

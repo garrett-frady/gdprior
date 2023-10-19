@@ -4,22 +4,31 @@
 \alias{localMods}
 \title{Constructing Local Models in Parallel}
 \usage{
-localMods(y, X, n_trn, L, tau, tau0, ncores, chains, warmup, iter, stan_seed)
+localMods(
+  y,
+  X,
+  tau_st,
+  tau_end,
+  tau0,
+  modRstan,
+  chains,
+  warmup,
+  iter,
+  stan_seed
+)
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}
 
 \item{X}{\eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points}
 
-\item{n_trn}{size of training set}
+\item{tau_st}{index in vector of time points representing the start of the current subgroup}
 
-\item{L}{number of locations}
-
-\item{tau}{number of time points}
+\item{tau_end}{index in vector of time points representing the end of the current subgroup}
 
 \item{tau0}{predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}}
 
-\item{ncores}{number of cores to use}
+\item{modRstan}{model code declaring the stan model}
 
 \item{chains}{number of chains in MCMC algorithm - default \eqn{chains = 4}}
 

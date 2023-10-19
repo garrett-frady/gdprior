@@ -2,30 +2,26 @@
 % Please edit documentation in R/runSim.R
 \name{runSim}
 \alias{runSim}
-\title{Function to Run GD Simulations}
+\title{Simulations - Fit Local Models in Parallel Using GD Prior}
 \usage{
 runSim(
-  n,
+  n = 130,
   L,
   tau,
   n_trn,
-  seed = 1234,
-  ncores = parallel::detectCores(),
   N = 2 * n,
+  tau_start,
+  tau_end,
+  modRstan,
   actL = ceiling(0.2 * L),
-  actL_p_t = 0.9,
-  inactL_p_t = 0.1,
+  actL_p_t = 0.8,
+  inactL_p_t = 0.2,
   c = 5,
-  mu = rep(0, L),
   rho = 0.5,
-  S = rho^(abs(matrix(1:L, L, L) - t(matrix(1:L, L, L)))),
   tau0 = 10^(-5),
   chains = 1,
   warmup = 3000,
   iter = 10000,
-  alpha = 0.05,
-  stage1_thres = 10^(-3),
-  stage2_thres = qchisq(p = 1 - alpha, df = tau),
   stan_seed = 2411
 )
 }
@@ -38,25 +34,23 @@ runSim(
 
 \item{n_trn}{size of training set}
 
-\item{seed}{seed for reproducibility}
-
-\item{ncores}{number of cores to use}
-
 \item{N}{value chosen sufficiently larger than n to sample X from}
+
+\item{tau_start}{index in vector of time points representing the start of the current subgroup}
+
+\item{tau_end}{index in vector of time points representing the end of the current subgroup}
+
+\item{modRstan}{model code declaring the stan model}
 
 \item{actL}{number of active locations - default \eqn{actL = ceiling(0.2*L)}}
 
-\item{actL_p_t}{prob of coefficient at time point t being significant for an active location - default \eqn{actL_p_{lt} = 0.9}}
+\item{actL_p_t}{prob of coefficient at time point t being significant for an active location - default \eqn{actL_p_{lt} = 0.8}}
 
-\item{inactL_p_t}{prob of coefficient at time point t being significant for an inactive location - default \eqn{inactL_p_{lt} = 0.1}}
+\item{inactL_p_t}{prob of coefficient at time point t being significant for an inactive location - default \eqn{inactL_p_{lt} = 0.2}}
 
 \item{c}{multiplying constant to increase the magnitude of nonzero entries in the true beta matrix - default \eqn{c = 3}}
 
-\item{mu}{mean of MVN distribution to generate U}
-
-\item{rho}{like a correlation coefficient used to generate S}
-
-\item{S}{standard deviation of MVN distribution to generate U}
+\item{rho}{used to generate covariance matrix when generating data - controls degree of multicollinearity}
 
 \item{tau0}{hyperparameter used in GD prior}
 
@@ -66,17 +60,11 @@ runSim(
 
 \item{iter}{total number of iterations}
 
-\item{alpha}{significance level used to compute chi-squared threshold in second stage; controls selection rate}
-
-\item{stage1_thres}{threshold in first stage to induce sparsity; fixed quantity chosen sufficiently small}
-
-\item{stage2_thres}{threshold in second stage; chi-squared upper (1 - alpha)-quantile}
-
 \item{stan_seed}{seed for running stan model}
 }
 \value{
 list containing important measures to report from simulation
 }
 \description{
-Function to Run GD Simulations
+Simulations - Fit Local Models in Parallel Using GD Prior
 }

@@ -16,6 +16,10 @@ Suggests:
     rmarkdown
 VignetteBuilder: knitr
 Imports:
+    glmnet,
+    ncvreg,
+    RADIOHEAD,
+    pROC,
     MASS,
     doParallel,
     foreach,
