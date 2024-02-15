@@ -3,6 +3,7 @@
 export(genX)
 export(getCompMethRes)
 export(localMods)
+export(pred)
 export(predWeighted)
 export(procSim)
 export(rates_est)

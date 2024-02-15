@@ -85,9 +85,9 @@ runSim <- function(n = 130,
     X_trn = X[trn_ind, , ] # training set for the data
     X_test = X[-trn_ind, , ] # testing set for the data
 
-    modFit = localMods(y = y_trn, X = X_trn, tau_st = tau_start, tau_end = tau_end,
-                       tau0 = tau0, modRstan = modRstan, chains = chains,
-                       warmup = warmup, iter = iter, stan_seed = stan_seed)
+    modFit = localMods(y = y_trn, X = X_trn, tau0 = tau0, modRstan = modRstan,
+                       chains = chains, warmup = warmup, iter = iter,
+                       stan_seed = stan_seed)
 
     list(beta = beta,
          actInd = actInd,

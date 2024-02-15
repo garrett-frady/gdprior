@@ -2,8 +2,6 @@
 #'
 #' @param y binary response correspoding to \eqn{n} subjects
 #' @param X \eqn{n} x \eqn{L} x \eqn{tau} - tensor (EEG data) for \eqn{n} subjects, \eqn{L} locations and \eqn{tau} time points
-#' @param tau_st index in vector of time points representing the start of the current subgroup
-#' @param tau_end index in vector of time points representing the end of the current subgroup
 #' @param tau0 predetermined constant \eqn{\tau0} - default \eqn{\tau0 = 10^(-5)}
 #' @param modRstan model code declaring the stan model
 #' @param chains number of chains in MCMC algorithm - default \eqn{chains = 4}
@@ -26,8 +24,6 @@
 
 localMods = function(y,
                      X,
-                     tau_st,
-                     tau_end,
                      tau0,
                      modRstan,
                      chains,
@@ -39,10 +35,11 @@ localMods = function(y,
   L = dim(X)[2]
   tau = dim(X)[3]
 
-  ncores = detectCores()
-  doParallel::registerDoParallel(cores = ceiling(ncores/chains))
+  ncores = parallel::detectCores()
+  cl = parallel::makeCluster(ncores/chains) # make cluster
+  doParallel::registerDoParallel(cl, cores = ceiling(ncores/chains))
   # mcmc estimation in parallel over all time points
-  mcmc_sim = foreach(t = tau_st:tau_end, .combine = rbind, .inorder = TRUE,
+  mcmc_sim = foreach(t = 1:tau, .combine = rbind, .inorder = TRUE,
                      .errorhandling = "pass", .packages = c('rstan')) %dopar% {
 
                        # data list for local stan model at time point t
@@ -85,7 +82,7 @@ localMods = function(y,
 
                      }
 
-  # parallel::stopCluster(cl) # Stop cluster
+  parallel::stopCluster(cl) # Stop cluster
 
   # L x tau matrix of posterior mean estimates of beta - cbind vectors ...
   # ... from each time point
