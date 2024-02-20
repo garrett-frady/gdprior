@@ -67,18 +67,24 @@ localMods = function(y,
                                                                  d = d_init,
                                                                  lambda = lambda_init)
                        }
-
+                       # start run time for each local model
+                       start_time = Sys.time()
                        # fit stan model
                        fit = rstan::stan(model_code = modRstan, data = dat, warmup = warmup,
                                          iter = iter, seed = stan_seed, chains = chains,
                                          cores = chains, init = init_list)
+                       # end run time for each local model
+                       end_time = Sys.time()
+                       # run time to fit each local model
+                       time_taken = round(end_time - start_time, 2)
 
                        # mcmc estimates of beta coefficients - posterior mean over all chains
                        beta_samps = rstan::extract(fit)$beta
                        mcmc_ests = rstan::get_posterior_mean(fit, par = "beta")[, chains]
 
                        list(b_ests = mcmc_ests,
-                            b_samps = beta_samps)
+                            b_samps = beta_samps,
+                            run_times = time_taken)
 
                      }
 
@@ -88,11 +94,13 @@ localMods = function(y,
   # ... from each time point
   b_ests = do.call(cbind, mcmc_sim[, "b_ests"])
   b_samps = do.call(cbind, mcmc_sim[, "b_samps"])
-
+  run_times = do.call(cbind, mcmc_sim[, "run_times"])
 
   # return the estimates of parameters obtained from the MCMC samples and ...
   # ... the MCMC samples, after building all the local models.
   list(b_ests = b_ests,
-       b_samps = b_samps)
+       b_samps = b_samps,
+       run_times = run_times)
 }
+
 
