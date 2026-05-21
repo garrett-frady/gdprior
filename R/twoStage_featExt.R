@@ -9,8 +9,9 @@
 #' @param tau number of time points
 #' @param stage1_thres threshold used in localFDR - defaul \eqn{0.001}
 #' @param FDRc FDR level at which the FDR is controlled - default \eqn{0.05}
+#' @param nclusters number of clusters to use in k-means clustering - default \eqn{2}
 #'
-#' @return \eqn{L \times \tau} matrix of final coefficient estimates and selected locations
+#' @return \eqn{L \times \tau} matrix of final coefficient estimates, selected locations, and clustering results
 #' @export
 
 ################################
@@ -21,7 +22,8 @@ twoStage_featExt = function(b,
                             L,
                             tau,
                             stage1_thres = 0.001,
-                            FDRc = 0.05
+                            FDRc = 0.05,
+                            nclusters = 2
 ) {
 
   ######################################
@@ -63,7 +65,7 @@ twoStage_featExt = function(b,
 
   aucLocs = apply(X = abs(n0b), MARGIN = 1, FUN = riemSum)
 
-  cl = kmeans(x = aucLocs, centers = 2, iter.max = 10, nstart = 25)
+  cl = kmeans(x = aucLocs, centers = nclusters, iter.max = 10, nstart = 25)
 
   actLabel = which(cl$centers == max(cl$centers))
 
@@ -71,5 +73,6 @@ twoStage_featExt = function(b,
   bInd = which(cl$cluster == actLabel)
 
   list(n0b_ests = n0b,
-       bInd = bInd)
+       bInd = bInd,
+       clustering = cl)
 }

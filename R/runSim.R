@@ -55,7 +55,7 @@ runSim <- function(n = 130,
 
 
     # true beta - fixed coefficient vectors and fixed set of active indices
-    temp = true_beta(L = L, tau = tau, actL = ceiling(0.2*L), actL_p_t = 0.8, inactL_p_t = 0.2, c = 1)
+    temp = true_beta(L = L, tau = tau, actL = actL, actL_p_t = actL_p_t, inactL_p_t = inactL_p_t, c = c)
     tempBeta = temp$beta
     beta = tempBeta * matrix(sample(c(-1, 1),
                                     size = L*tau,

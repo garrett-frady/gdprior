@@ -4,7 +4,17 @@
 \alias{localMods}
 \title{Constructing Local Models in Parallel}
 \usage{
-localMods(y, X, tau0, modRstan, chains, warmup, iter, stan_seed)
+localMods(
+  y,
+  X,
+  tau0,
+  modRstan,
+  chains,
+  warmup,
+  iter,
+  stan_seed,
+  parallelize = FALSE
+)
 }
 \arguments{
 \item{y}{binary response correspoding to \eqn{n} subjects}
@@ -22,6 +32,12 @@ localMods(y, X, tau0, modRstan, chains, warmup, iter, stan_seed)
 \item{iter}{number of iterations to run in each mcmc chain - default \eqn{iter = 10000}}
 
 \item{stan_seed}{seed for running stan model}
+
+\item{parallelize}{logical; if \code{TRUE}, local models are fitted in parallel
+across \eqn{\tau} time points using \code{foreach \%dopar\%}. If \code{FALSE}
+(default), local models are fitted sequentially in a \code{for} loop. Has no
+effect when \eqn{\tau = 1} and \eqn{chains = 1}, which always takes the
+single-fit path with no loop overhead.}
 }
 \value{
 list containing posterior mean estimates of the coefficients and MCMC samples of the coefficients

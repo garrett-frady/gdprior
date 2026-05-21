@@ -4,7 +4,7 @@
 \alias{twoStage_featExt}
 \title{Function to perform two-stage feature extraction}
 \usage{
-twoStage_featExt(b, L, tau, stage1_thres = 0.001, FDRc = 0.05)
+twoStage_featExt(b, L, tau, stage1_thres = 0.001, FDRc = 0.05, nclusters = 2)
 }
 \arguments{
 \item{b}{MCMC samples - dimension \eqn{Nmcmc \times L*\tau}}
@@ -16,9 +16,11 @@ twoStage_featExt(b, L, tau, stage1_thres = 0.001, FDRc = 0.05)
 \item{stage1_thres}{threshold used in localFDR - defaul \eqn{0.001}}
 
 \item{FDRc}{FDR level at which the FDR is controlled - default \eqn{0.05}}
+
+\item{nclusters}{number of clusters to use in k-means clustering - default \eqn{2}}
 }
 \value{
-\eqn{L \times \tau} matrix of final coefficient estimates and selected locations
+\eqn{L \times \tau} matrix of final coefficient estimates, selected locations, and clustering results
 }
 \description{
 FDR in stage 1 and k-means clustering on the Riemman sums of location vectors in stage 2
