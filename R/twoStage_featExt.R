@@ -26,6 +26,11 @@ twoStage_featExt = function(b,
                             nclusters = 2
 ) {
 
+
+  if (!requireNamespace("RADIOHEAD", quietly = TRUE)) {
+    stop("Package 'RADIOHEAD' is required for this function. Please install it.")
+  }
+
   ######################################
   ### First-stage feature extraction ###
   ######################################
@@ -36,7 +41,7 @@ twoStage_featExt = function(b,
                          FDRc = FDRc # FDR control
   ) {
     Ltau = ncol(b)
-    post_inc_prob = 1 - localFDR(chain = b, thres = stage1_thres, FDRc = FDRc)
+    post_inc_prob = 1 - RADIOHEAD::localFDR(chain = b, thres = stage1_thres, FDRc = FDRc)
     if(sum(!is.na(post_inc_prob))>0){
       inds = which(!is.na(post_inc_prob))
       est_coef = apply(b, 2,
