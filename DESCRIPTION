@@ -20,12 +20,11 @@ Imports:
     ncvreg,
     pROC,
     MASS,
+    RADIOHEAD,
     doParallel,
     foreach,
     parallel,
     rstan,
     stats
-Remotes:
-    shariq-mohammed/RADIOHEAD
 URL: https://github.com/garrett-frady/gdprior
 BugReports: https://github.com/garrett-frady/gdprior/issues

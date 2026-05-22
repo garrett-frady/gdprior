@@ -28,7 +28,7 @@ twoStage_featExt = function(b,
 
 
   if (!requireNamespace("RADIOHEAD", quietly = TRUE)) {
-    stop("Package 'RADIOHEAD' is required for this function. Please install it.")
+    stop("Package 'shariq-mohammed/RADIOHEAD' is required for this function. Please install it.")
   }
 
   ######################################
