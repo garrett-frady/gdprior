@@ -8,7 +8,7 @@
 #' @param warmup number of iterations to throw away as burnin at the start of the mcmc run - default \eqn{warmup = 3000}
 #' @param iter number of iterations to run in each mcmc chain - default \eqn{iter = 10000}
 #' @param stan_seed seed for running stan model
-#' @param parallelize logical; if \code{TRUE}, local models are fitted in parallel
+#' @param parallelize logical; if \code{TRUE}, local models will be fit in parallel
 #'   across \eqn{\tau} time points using \code{foreach \%dopar\%}. If \code{FALSE}
 #'   (default), local models are fitted sequentially in a \code{for} loop. Has no
 #'   effect when \eqn{\tau = 1} and \eqn{chains = 1}, which always takes the

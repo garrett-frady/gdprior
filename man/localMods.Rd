@@ -33,7 +33,7 @@ localMods(
 
 \item{stan_seed}{seed for running stan model}
 
-\item{parallelize}{logical; if \code{TRUE}, local models are fitted in parallel
+\item{parallelize}{logical; if \code{TRUE}, local models will be fit in parallel
 across \eqn{\tau} time points using \code{foreach \%dopar\%}. If \code{FALSE}
 (default), local models are fitted sequentially in a \code{for} loop. Has no
 effect when \eqn{\tau = 1} and \eqn{chains = 1}, which always takes the
