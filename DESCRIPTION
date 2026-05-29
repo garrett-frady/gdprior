@@ -1,6 +1,6 @@
 Package: gdprior
 Type: Package
-Title: Simulations Using GD Prior
+Title: Bayesian Feature Extraction using Gaussian and Diffused-gamma Priors
 Version: 0.1.0
 Author: Garrett Frady <garrett.frady@uconn.edu>
 Maintainer: Garrett Frady <garrett.frady@uconn.edu>
