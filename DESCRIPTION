@@ -26,5 +26,7 @@ Imports:
     parallel,
     rstan,
     stats
+Remotes:
+    shariq-mohammed/RADIOHEAD
 URL: https://github.com/garrett-frady/gdprior
 BugReports: https://github.com/garrett-frady/gdprior/issues
